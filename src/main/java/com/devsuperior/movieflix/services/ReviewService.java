@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ReviewService {
     @Autowired
@@ -36,5 +38,11 @@ public class ReviewService {
 
         return new ReviewDTO(review, review.getMovie(), review.getUser());
 
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewDTO> findByMovie(Long movieId){
+        List<Review> reviews = repository.searchByMovie(movieId);
+        return reviews.stream().map(r -> new ReviewDTO(r, r.getMovie(), r.getUser())).toList();
     }
 }
